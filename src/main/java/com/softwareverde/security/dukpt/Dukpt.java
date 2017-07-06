@@ -24,8 +24,8 @@ import java.security.InvalidParameterException;
  * the class even easier to interface with.  Many of these involve
  * the BitSet wrapper of java.util.BitSet which was designed to have
  * a proper "length()" function as Java's BitSet does not have a method
- * that returns the constructed length of the BitSet, only it's actual
- * size in memory and it's "logical" size (1 + the index of the left-most 1).
+ * that returns the constructed length of the BitSet, only its actual
+ * size in memory and its "logical" size (1 + the index of the left-most 1).
  * 
  * 	To further augment to the security of Dukpt, two "oblivate()" methods are
  * included, one for the extended BitSet and one for byte arrays.  These
@@ -42,12 +42,12 @@ public final class Dukpt {
 	public static final int NUM_OVERWRITES = 3;
 
 	/**
-	 * Computes a Dukpt (Derived Unique Key-Per-Transaction).
+	 * Computes a DUKPT (Derived Unique Key-Per-Transaction).
 	 *
 	 * 	This is derived from the Base Derivation Key, which should 
 	 * have been injected into the device and should remain secret,
 	 * and the Key Serial Number which is a concatenation of the 
-	 * device's serial number and it's encryption (or transaction) 
+	 * device's serial number and its encryption (or transaction)
 	 * counter.
 	 *
 	 * see getIpek
@@ -85,7 +85,7 @@ public final class Dukpt {
 	 * 
 	 * 	Due to the process under which one key is derived from a subset of 
 	 * those before it, the IPEK can be used to quickly calculate the 
-	 * Dukpt for any Key Serial Number, or more specifically, any
+	 * DUKPT for any Key Serial Number, or more specifically, any
 	 * encryption count.
 	 *  
 	 *  This algorithm was found in Annex A, section 6 on page 69
