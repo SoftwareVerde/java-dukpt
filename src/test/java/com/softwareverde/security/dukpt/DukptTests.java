@@ -48,4 +48,39 @@ public class DukptTests {
         // Assert
         Assert.assertEquals(payloadString, dataOutput);
     }
+
+    @Test
+    public void testGetIpek() throws Exception {
+        // Setup
+        String bdkHexString = "0123456789ABCDEFFEDCBA9876543210"; // ANSI Test Key
+        String ksnHexString = "629949012C0000000003";
+
+        byte[] bdk = Dukpt.toByteArray(bdkHexString);
+        byte[] ksn = Dukpt.toByteArray(ksnHexString);
+
+        // Action
+        final DukptVariant dukptVariant = new DukptVariant();
+        BitSet ipek = dukptVariant.getIpek(Dukpt.toBitSet(bdk), Dukpt.toBitSet(ksn));
+
+        // Assert
+        Assert.assertEquals("D2943CCF80F42E88E23C12D1162FD547", Dukpt.toHex(Dukpt.toByteArray(ipek)));
+    }
+
+    @Test
+    public void testToDataKey() throws Exception {
+        // Setup
+        String bdkHexString = "0123456789ABCDEFFEDCBA9876543210"; // ANSI Test Key
+        String ksnHexString = "FFFF9876543210E00008";
+
+        byte[] bdk = Dukpt.toByteArray(bdkHexString);
+        byte[] ksn = Dukpt.toByteArray(ksnHexString);
+
+        // Action
+        final DukptVariant dukptVariant = new DukptVariant(Dukpt.KEY_REGISTER_BITMASK, Dukpt.DATA_VARIANT_BITMASK);
+        byte[] derivedKey = dukptVariant.computeKey(bdk, ksn);
+        byte[] dataKey = dukptVariant.toDataKey(derivedKey);
+
+        // Assert
+        Assert.assertEquals("C39B2778B058AC376FB18DC906F75CBA", Dukpt.toHex(dataKey));
+    }
 }
