@@ -137,8 +137,8 @@ public final class Dukpt {
 	 */
 	protected static BitSet getIpek(BitSet key, BitSet ksn, BitSet keyRegisterBitmask) throws Exception {
 		byte[][] ipek = new byte[2][];
-		BitSet keyRegister = key.get(0, key.length());
-		BitSet data = ksn.get(0, ksn.length());
+		BitSet keyRegister = key.get(0, key.bitSize());
+		BitSet data = ksn.get(0, ksn.bitSize());
 		data.clear(59, 80);
 
 		ipek[0] = encryptTripleDes(toByteArray(keyRegister), toByteArray(data.get(0, 64)));
@@ -188,11 +188,11 @@ public final class Dukpt {
 	 * @throws Exception
 	 */
 	private static BitSet _getCurrentKey(BitSet ipek, BitSet ksn, BitSet keyRegisterBitmask, BitSet dataVariantBitmask) throws Exception {
-		BitSet key = ipek.get(0, ipek.length());
-		BitSet counter = ksn.get(0, ksn.length());
-		counter.clear(59, ksn.length());
+		BitSet key = ipek.get(0, ipek.bitSize());
+		BitSet counter = ksn.get(0, ksn.bitSize());
+		counter.clear(59, ksn.bitSize());
 
-		for (int i = 59; i < ksn.length(); i++) {
+		for (int i = 59; i < ksn.bitSize(); i++) {
 			if (ksn.get(i)) {
 				counter.set(i);
 				BitSet tmp = _nonReversibleKeyGenerationProcess(key, counter.get(16, 80), keyRegisterBitmask);
@@ -222,8 +222,8 @@ public final class Dukpt {
 	 * @throws Exception
 	 */
 	private static BitSet _nonReversibleKeyGenerationProcess(BitSet p_key, BitSet data, BitSet keyRegisterBitmask) throws Exception {
-		BitSet keyreg = p_key.get(0, p_key.length());
-		BitSet reg1 = data.get(0, data.length());
+		BitSet keyreg = p_key.get(0, p_key.bitSize());
+		BitSet reg1 = data.get(0, data.bitSize());
 		// step 1: Crypto Register-1 XORed with the right half of the Key Register goes to Crypto Register-2.
 		BitSet reg2 = reg1.get(0, 64); // reg2 is being used like a temp here
 		reg2.xor(keyreg.get(64, 128));   // and here, too, kind of
@@ -415,19 +415,19 @@ public final class Dukpt {
 	public static byte[] encryptTripleDes(byte[] key, byte[] data, boolean padding) throws Exception {
 		BitSet bskey = toBitSet(key);
 		BitSet k1, k2, k3;
-		if (bskey.length() == 64) {
+		if (bskey.bitSize() == 64) {
 			// single length
 			k1 = bskey.get(0, 64);
 			k2 = k1;
 			k3 = k1;
-		} else if (bskey.length() == 128) {
+		} else if (bskey.bitSize() == 128) {
 			// double length
 			k1 = bskey.get(0, 64);
 			k2 = bskey.get(64, 128);
 			k3 = k1;
 		} else {
 			// triple length
-			if (bskey.length() != 192) {
+			if (bskey.bitSize() != 192) {
 				throw new InvalidParameterException("Key is not 8/16/24 bytes long.");
 			}
 			k1 = bskey.get(0, 64);
@@ -475,19 +475,19 @@ public final class Dukpt {
 	public static byte[] decryptTripleDes(byte[] key, byte[] data, boolean padding) throws Exception {
 		BitSet bskey = toBitSet(key);
 		BitSet k1, k2, k3;
-		if (bskey.length() == 64) {
+		if (bskey.bitSize() == 64) {
 			// single length
 			k1 = bskey.get(0, 64);
 			k2 = k1;
 			k3 = k1;
-		} else if (bskey.length() == 128) {
+		} else if (bskey.bitSize() == 128) {
 			// double length
 			k1 = bskey.get(0, 64);
 			k2 = bskey.get(64, 128);
 			k3 = k1;
 		} else {
 			// triple length
-			if (bskey.length() != 192) {
+			if (bskey.bitSize() != 192) {
 				throw new InvalidParameterException("Key is not 8/16/24 bytes long.");
 			}
 			k1 = bskey.get(0, 64);
@@ -659,7 +659,7 @@ public final class Dukpt {
 	 */
 	public static byte toByte(BitSet b) {
 		byte value = 0;
-		for (int i = 0; i < b.length(); i++) {
+		for (int i = 0; i < b.bitSize(); i++) {
 			if (b.get(i))
 				value = (byte) (value | (1L << 7 - i));
 		}
@@ -674,10 +674,10 @@ public final class Dukpt {
 	 * <p>Note: this is different from {@link BitSet#toByteArray()}.</p>
 	 */
 	public static byte[] toByteArray(BitSet b) {
-		int size = (int) Math.ceil(b.length() / 8.0d);
+		int size = (int) Math.ceil(b.bitSize() / 8.0d);
 		byte[] value = new byte[size];
 		for (int i = 0; i < size; i++) {
-			value[i] = toByte(b.get(i * 8, Math.min(b.length(), (i + 1) * 8)));
+			value[i] = toByte(b.get(i * 8, Math.min(b.bitSize(), (i + 1) * 8)));
 		}
 		return value;
 	}
@@ -741,7 +741,7 @@ public final class Dukpt {
 	public static void obliviate(BitSet b, int n) {
 		java.security.SecureRandom r = new java.security.SecureRandom();
 		for (int i=0; i<NUM_OVERWRITES; i++) {
-			for (int j=0; j<b.length(); j++) {
+			for (int j = 0; j<b.bitSize(); j++) {
 				b.set(j, r.nextBoolean());
 			}
 		}

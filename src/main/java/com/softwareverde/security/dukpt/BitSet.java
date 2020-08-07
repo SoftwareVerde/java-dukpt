@@ -45,21 +45,11 @@ public class BitSet extends java.util.BitSet {
 		}
 		return n;
 	}
-	
-	@Override
-	/**
-	 * Returns the size of the BitSet as declared or requested (the fixed-length ).
-	 * @see java.util.BitSet#length()
-	 */
-	public int length() {
-		return size;
-	}
 
 	/**
-	 * Provides access to the "logical" length of the BitSet, as in the original "length()" method.
-	 * @see java.util.BitSet#length()
+	 * Returns the size of the BitSet as declared or requested (the fixed-length ).
 	 */
-	public int llength() {
-		return super.length();
+	public int bitSize() {
+		return size;
 	}
 }
