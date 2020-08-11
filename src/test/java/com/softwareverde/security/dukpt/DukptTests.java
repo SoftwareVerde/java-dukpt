@@ -83,4 +83,21 @@ public class DukptTests {
         // Assert
         Assert.assertEquals("C39B2778B058AC376FB18DC906F75CBA", Dukpt.toHex(dataKey));
     }
+
+    @Test
+    public void testTransactionCounterMsb() throws Exception {
+        // Setup
+        String bdkHexString = "0123456789ABCDEFFEDCBA9876543210"; // ANSI Test Key
+        String ksnHexString = "FFFF9876543210F00000";
+
+        byte[] bdk = Dukpt.toByteArray(bdkHexString);
+        byte[] ksn = Dukpt.toByteArray(ksnHexString);
+
+        // Action
+        final DukptVariant dukptVariant = new DukptVariant(Dukpt.KEY_REGISTER_BITMASK, Dukpt.PIN_VARIANT_BITMASK);
+        byte[] derivedKey = dukptVariant.computeKey(bdk, ksn);
+
+        // Assert
+        Assert.assertEquals("AA4D58DB653EC7B548C75F2F047DD24A", Dukpt.toHex(derivedKey));
+    }
 }
