@@ -24,7 +24,7 @@ import java.util.Arrays;
  * <p>There is also a set of conversion methods to hopefully make
  * the class even easier to interface with.  Many of these involve
  * the BitSet wrapper of java.util.BitSet which was designed to have
- * a proper "length()" function as Java's BitSet does not have a method
+ * a proper "bitSize()" function as Java's BitSet does not have a method
  * that returns the constructed length of the BitSet, only its actual
  * size in memory and its "logical" size (1 + the index of the left-most 1).
  *
